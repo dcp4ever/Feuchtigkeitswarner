@@ -1,4 +1,4 @@
-
+vor
 #include <avr/sleep.h>
 #include <avr/power.h>
 
@@ -7,11 +7,15 @@ int feuchteLevel = 0;
 int port = 0;
 int sensorval = 0;
 int state = 0;
+int alarm = 0;
 const int sensorCount = 5;
 const int sensors[sensorCount] = {A1, A2, A3, A4, A5};
 const int statusLED[] = {13,21,11,10,9};
 const String zustand[] = {"nA", "trocken", "feucht", "nass"};
 volatile int toggle = 0;
+
+
+#define alarmPin 8 //Pin an dem der Piezosummer angeschlossen ist
 
 #define thresh_trocken 800
 #define thresh_nass 400
@@ -68,11 +72,13 @@ else return 0;
 void setup()
 {
 Serial.begin(9600);
+ 
+  pinMode(alarmPin, OUTPUT); 
+  digitalWrite(alarmPin, LOW); 
 
   for (int i = 0; i < sensorCount; i++) {    
     pinMode(sensors[i], INPUT_PULLUP);  // set pull-up on analog pin
-    pinMode(statusLED[i], OUTPUT); 
-    
+    pinMode(statusLED[i], OUTPUT);   
     digitalWrite(statusLED[i],LOW);
     delay(50);
   }
@@ -98,10 +104,14 @@ if(toggle==1) //für den Schlafmodus benötigter Toggle
       int reading = best_feuchteLevel(sensors[i]);
       delay(50);
       Serial.println(zustand[reading]);  
-     if (reading == nass)     
-      digitalWrite(statusLED[i],HIGH);   
-     else
+     if (reading == nass){     
+      digitalWrite(statusLED[i],HIGH);
+      digitalWrite(alarmPin, HIGH);
+     }    
+     else {
         digitalWrite(statusLED[i],LOW);
+        digitalWrite(alarmPin, LOW);
+     }
   }
 Serial.println("-----------");
 //delay(1000);
