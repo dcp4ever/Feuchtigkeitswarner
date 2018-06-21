@@ -1,4 +1,3 @@
-vor
 #include <avr/sleep.h>
 #include <avr/power.h>
 
@@ -8,9 +7,9 @@ int port = 0;
 int sensorval = 0;
 int state = 0;
 int alarm = 0;
-const int sensorCount = 5;
-const int sensors[sensorCount] = {A1, A2, A3, A4, A5};
-const int statusLED[] = {13,21,11,10,9};
+const int sensorCount = 6;
+const int sensors[sensorCount] = {A0,A1, A2, A3, A4, A5};
+const int statusLED[] = {13,3,11,10,9,6};
 const String zustand[] = {"nA", "trocken", "feucht", "nass"};
 volatile int toggle = 0;
 
@@ -74,12 +73,12 @@ void setup()
 Serial.begin(9600);
  
   pinMode(alarmPin, OUTPUT); 
-  digitalWrite(alarmPin, LOW); 
+  digitalWrite(alarmPin, HIGH); //GPIO as drain
 
   for (int i = 0; i < sensorCount; i++) {    
     pinMode(sensors[i], INPUT_PULLUP);  // set pull-up on analog pin
     pinMode(statusLED[i], OUTPUT);   
-    digitalWrite(statusLED[i],LOW);
+    digitalWrite(statusLED[i],HIGH); // GPIO as drain
     delay(50);
   }
 
@@ -105,12 +104,12 @@ if(toggle==1) //für den Schlafmodus benötigter Toggle
       delay(50);
       Serial.println(zustand[reading]);  
      if (reading == nass){     
-      digitalWrite(statusLED[i],HIGH);
-      digitalWrite(alarmPin, HIGH);
+      digitalWrite(statusLED[i],LOW);
+      digitalWrite(alarmPin, LOW);
      }    
      else {
-        digitalWrite(statusLED[i],LOW);
-        digitalWrite(alarmPin, LOW);
+        digitalWrite(statusLED[i],HIGH);
+        digitalWrite(alarmPin, HIGH);
      }
   }
 Serial.println("-----------");
