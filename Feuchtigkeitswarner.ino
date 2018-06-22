@@ -96,6 +96,9 @@ void loop()
 if(toggle==1) //für den Schlafmodus benötigter Toggle
   {
   toggle = 0;
+
+  
+ 
   for (int i = 0; i < sensorCount; i++) {
       Serial.print("sensor: ");
       Serial.print(i);
@@ -105,7 +108,7 @@ if(toggle==1) //für den Schlafmodus benötigter Toggle
       Serial.println(zustand[reading]);  
      if (reading == nass){     
       digitalWrite(statusLED[i],LOW);
-      digitalWrite(alarmPin, LOW);
+      alarm =1;
      }    
      else {
         digitalWrite(statusLED[i],HIGH);
@@ -113,6 +116,17 @@ if(toggle==1) //für den Schlafmodus benötigter Toggle
      }
   }
 Serial.println("-----------");
+
+if (alarm ==1)
+   digitalWrite(alarmPin, LOW); //GPIO as drain ==> Alarm an
+else
+   digitalWrite(alarmPin, HIGH); //GPIO as drain ==> Alarm aus
+  
+
+
+alarm =0;
+
+
 //delay(1000);
 enter_sleep();
 }
