@@ -7,14 +7,14 @@ int port = 0;
 int sensorval = 0;
 int state = 0;
 int alarm = 0;
-const int sensorCount = 6;
-const int sensors[sensorCount] = {A0,A1, A2, A3, A4, A5};
-const int statusLED[] = {13,3,11,10,9,6};
+const int sensorCount = 8;
+const int sensors[sensorCount] = {A0,A1, A2, A3, A4, A5,A6,A7};
+const int statusLED[] = {2,3,4,5,6,7,8,9};
 const String zustand[] = {"nA", "trocken", "feucht", "nass"};
 volatile int toggle = 0;
 
 
-#define alarmPin 8 //Pin an dem der Piezosummer angeschlossen ist
+#define alarmPin 10 //Pin an dem der Piezosummer angeschlossen ist
 
 #define thresh_trocken 800
 #define thresh_nass 400
